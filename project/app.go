@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -12,6 +13,12 @@ func main() {
 	if len(port) == 0 {
 		port = "8080"
 	}
+	router := gin.Default()
+	router.LoadHTMLGlob("public/index.html")
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", nil)
+	})
+
 	fmt.Printf("Server started in port %s\n", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	router.Run(":" + port)
 }

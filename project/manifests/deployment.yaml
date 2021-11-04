@@ -14,4 +14,4 @@ spec:
     spec:
       containers:
         - name: web-server
-          image: arkuar/web-server:latest
+          image: arkuar/web-server:bb825cb7e6ba7090bb57d1d6cb42e51a70e20869

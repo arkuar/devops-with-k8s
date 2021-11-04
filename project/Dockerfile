@@ -11,6 +11,6 @@ FROM scratch
 
 WORKDIR /usr/src/app
 
-COPY --from=build /usr/build/app .
+COPY --from=build /usr/build .
 
 CMD ["./app"]
