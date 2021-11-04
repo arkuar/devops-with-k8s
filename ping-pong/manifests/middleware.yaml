@@ -1,0 +1,9 @@
+# Strip prefix /pingpong
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: pingpong-stripprefix
+spec:
+  stripPrefix:
+    prefixes: 
+      - /pingpong
