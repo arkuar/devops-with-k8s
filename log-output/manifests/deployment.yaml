@@ -11,6 +11,18 @@ spec:
       labels:
         app: log-output
     spec:
+      volumes:
+        - name: shared-output
+          emptyDir: {}
       containers:
-      - name: log-output
-        image: arkuar/log-output:latest
+      - name: log-output-timestamper
+        image: arkuar/log-output-timestamper:latest
+        volumeMounts:
+          - mountPath: /usr/src/app/files
+            name: shared-output
+      - name: log-output-reader
+        image: arkuar/log-output-reader
+        volumeMounts:
+          - mountPath: /usr/src/app/files
+            name: shared-output
+
