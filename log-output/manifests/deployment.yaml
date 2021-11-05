@@ -13,7 +13,8 @@ spec:
     spec:
       volumes:
         - name: shared-output
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: log-claim
       containers:
       - name: log-output-timestamper
         image: arkuar/log-output-timestamper:latest
