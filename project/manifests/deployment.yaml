@@ -17,7 +17,7 @@ spec:
           emptyDir: {}
       containers:
         - name: web-server
-          image: arkuar/web-server:v0.6
+          image: arkuar/web-server:v0.7
           imagePullPolicy: Always
           volumeMounts:
             - mountPath: /usr/src/app/cache
