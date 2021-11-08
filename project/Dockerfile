@@ -13,4 +13,7 @@ WORKDIR /usr/src/app
 
 COPY --from=build /usr/build .
 
+# Add trusted certs
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+
 CMD ["./app"]
