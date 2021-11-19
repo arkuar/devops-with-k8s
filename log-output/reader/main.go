@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -17,7 +18,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	data, err := os.ReadFile("/usr/src/app/files/output")
 	checkErr(err)
 
-	pongs, err := os.ReadFile("/usr/src/app/files/pongs")
+	resp, err := http.Get("http://ping-pong-svc/pongs")
+	checkErr(err)
+
+	defer resp.Body.Close()
+
+	pongs, err := io.ReadAll(resp.Body)
 	checkErr(err)
 
 	fmt.Fprintf(w, "%s\n%s", string(data), string(pongs))

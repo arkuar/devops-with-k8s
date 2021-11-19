@@ -11,13 +11,6 @@ spec:
       labels:
         app: ping-pong
     spec:
-      volumes:
-        - name: shared-pong
-          persistentVolumeClaim:
-            claimName: log-claim
       containers:
       - name: ping-pong
         image: arkuar/ping-pong
-        volumeMounts:
-          - mountPath: /usr/src/app/files
-            name: shared-pong
