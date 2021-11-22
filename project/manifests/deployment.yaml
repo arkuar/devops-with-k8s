@@ -16,9 +16,15 @@ spec:
         - name: image-cache
           emptyDir: {}
       containers:
-        - name: web-server
-          image: arkuar/web-server:v0.7
+        - name: todo-backend
+          image: arkuar/todo-backend:v1.0
           imagePullPolicy: Always
           volumeMounts:
             - mountPath: /usr/src/app/cache
               name: image-cache
+          env:
+            - name: REQUEST_ORIGIN
+              value: http://web-server-svc
+        - name: todo-frontend
+          image: arkuar/todo-frontend:v1.0
+          imagePullPolicy: Always

@@ -8,5 +8,10 @@ spec:
     app: web-server
   ports:
   - port: 2345
+    name: frontend
+    protocol: TCP
+    targetPort: 3000
+  - port: 2346
+    name: backend
     protocol: TCP
     targetPort: 8080
