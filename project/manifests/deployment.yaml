@@ -18,7 +18,7 @@ spec:
           emptyDir: {}
       containers:
         - name: todo-backend
-          image: arkuar/todo-backend:v1.0
+          image: arkuar/todo-backend:v1.2
           imagePullPolicy: Always
           volumeMounts:
             - mountPath: /usr/src/app/cache
@@ -26,6 +26,25 @@ spec:
           env:
             - name: REQUEST_ORIGIN
               value: http://web-server-svc
+            - name: DB_HOST
+              value: postgres-svc
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: username
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: database
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
         - name: todo-frontend
-          image: arkuar/todo-frontend:v1.0
+          image: arkuar/todo-frontend:v1.2
           imagePullPolicy: Always

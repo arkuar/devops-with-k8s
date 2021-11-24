@@ -7,20 +7,21 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"project/db"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
-var todos = []string{"TODO 1", "TODO 2"}
-
-type Data struct {
-	Todo string `json:"todo"`
-}
-
 func check(err error) {
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+func checkTodoErr(c *gin.Context, err error) {
+	if err != nil {
+		c.String(500, err.Error())
 	}
 }
 
@@ -45,19 +46,31 @@ func fetchImage(c *gin.Context) {
 }
 
 func fetchTodos(c *gin.Context) {
+	pgdb := db.GetDB()
+
+	var todos []db.Todo
+
+	err := pgdb.Model(&todos).Select()
+
+	checkTodoErr(c, err)
+
 	c.JSON(200, gin.H{
 		"todos": todos,
 	})
 }
 
 func addTodo(c *gin.Context) {
-	var data Data
-	c.BindJSON(&data)
+	var todo db.Todo
 
-	todos = append(todos, data.Todo)
+	c.BindJSON(&todo)
+
+	pgdb := db.GetDB()
+
+	_, err := pgdb.Model(&todo).Insert()
+	checkTodoErr(c, err)
 
 	c.JSON(201, gin.H{
-		"todo": data.Todo,
+		"todo": todo,
 	})
 }
 
@@ -70,6 +83,8 @@ func main() {
 	if len(allowedOrigin) == 0 {
 		allowedOrigin = "http://localhost"
 	}
+
+	db.InitDb()
 
 	config := cors.DefaultConfig()
 

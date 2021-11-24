@@ -6,19 +6,15 @@ const APP_BACKEND_URL = process.env.APP_BACKEND_URL || '/api'
 
 const imageUrl = `${APP_BACKEND_URL}/image`
 
-async function fetchTodos() {
-  const result = await axios.get(`${APP_BACKEND_URL}/todos`)
-  return result?.data?.todos ?? []
-}
-
 function App() {
   const [todos, setTodos] = useState([])
-  const [todoBody, setTodoBody] = useState("")
+  const [todoContent, setTodoContent] = useState("")
 
   useEffect(() => {
     (async function(){
       try {
-        setTodos(await fetchTodos())
+        const result = await axios.get(`${APP_BACKEND_URL}/todos`)
+        setTodos(result?.data?.todos ?? [])
       } catch (error) {
         console.error("Error fetching todos", error)
       }
@@ -27,23 +23,23 @@ function App() {
 
   const createTodo = async () => {
     try {
-      const result = await axios.post(`${APP_BACKEND_URL}/todos`, {todo: todoBody})
-      setTodoBody("")
+      const result = await axios.post(`${APP_BACKEND_URL}/todos`, {content: todoContent})
+      setTodoContent("")
       setTodos((current) => current.concat(result.data.todo))
     } catch (error) {
     }
   }
 
-  const handleInputChange = (e) => setTodoBody(e.target.value) 
+  const handleInputChange = (e) => setTodoContent(e.target.value) 
 
   return (
     <div className="App">
       <h1>Hello from Kubernetes</h1>
       <img src={imageUrl} width="200" height="200" alt="img" />
-      <input type="text" value={todoBody} onChange={handleInputChange} maxlength="140" />
+      <input type="text" value={todoContent} onChange={handleInputChange} maxlength="140" />
       <button type="button" onClick={createTodo}>Create TODO</button>
       <ul>
-        {todos.map((todo) => <li key={todo}>{todo}</li>)}
+        {todos.map((todo) => <li key={todo.ID}>{todo.content}</li>)}
       </ul>
     </div>
   );
