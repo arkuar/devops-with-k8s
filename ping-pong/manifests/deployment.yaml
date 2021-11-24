@@ -14,4 +14,25 @@ spec:
     spec:
       containers:
       - name: ping-pong
+        imagePullPolicy: Always
         image: arkuar/ping-pong
+        env:
+          - name: DB_HOST
+            value: postgredb-svc
+          - name: DB_PORT
+            value: "5432"
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgredb-secret
+                key: username
+          - name: DB_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: postgredb-secret
+                key: database
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgredb-secret
+                key: password
