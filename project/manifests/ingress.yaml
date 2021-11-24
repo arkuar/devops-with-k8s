@@ -2,8 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: web-server-ingress
+  namespace: todo-ns
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: default-backend-stripprefix@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: todo-ns-backend-stripprefix@kubernetescrd
 spec:
   rules:
    - http:
