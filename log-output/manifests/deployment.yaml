@@ -27,4 +27,9 @@ spec:
         volumeMounts:
           - mountPath: /usr/src/app/files
             name: shared-output
-
+        env:
+          - name: MESSAGE
+            valueFrom:
+              configMapKeyRef:
+                name: log-output-cm
+                key: message

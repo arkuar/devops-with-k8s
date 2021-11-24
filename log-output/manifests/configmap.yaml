@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: log-output-cm
+  namespace: exercise
+data:
+  message: "Hello"

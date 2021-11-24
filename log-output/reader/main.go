@@ -26,7 +26,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	pongs, err := io.ReadAll(resp.Body)
 	checkErr(err)
 
-	fmt.Fprintf(w, "%s\n%s", string(data), string(pongs))
+	fmt.Fprintf(w, "%s\n%s\n%s", os.Getenv("MESSAGE"), string(data), string(pongs))
 }
 
 func main() {
