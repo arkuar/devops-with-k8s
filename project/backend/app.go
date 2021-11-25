@@ -19,12 +19,6 @@ func check(err error) {
 	}
 }
 
-func checkTodoErr(c *gin.Context, err error) {
-	if err != nil {
-		c.String(500, err.Error())
-	}
-}
-
 func fetchImage(c *gin.Context) {
 	if _, err := os.Stat("/usr/src/app/cache/image.jpg"); errors.Is(err, os.ErrNotExist) {
 		resp, err := http.Get("https://picsum.photos/1200")
@@ -52,7 +46,10 @@ func fetchTodos(c *gin.Context) {
 
 	err := pgdb.Model(&todos).Select()
 
-	checkTodoErr(c, err)
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
 
 	c.JSON(200, gin.H{
 		"todos": todos,
@@ -62,12 +59,19 @@ func fetchTodos(c *gin.Context) {
 func addTodo(c *gin.Context) {
 	var todo db.Todo
 
-	c.BindJSON(&todo)
+	err := c.BindJSON(&todo)
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
 
 	pgdb := db.GetDB()
 
-	_, err := pgdb.Model(&todo).Insert()
-	checkTodoErr(c, err)
+	_, err = pgdb.Model(&todo).Insert()
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
 
 	c.JSON(201, gin.H{
 		"todo": todo,
