@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -59,9 +58,18 @@ func fetchTodos(c *gin.Context) {
 func addTodo(c *gin.Context) {
 	var todo db.Todo
 
-	err := c.BindJSON(&todo)
+	err := c.ShouldBindJSON(&todo)
 	if err != nil {
+		c.Error(err)
 		c.String(500, err.Error())
+		return
+	}
+
+	err = todo.Validate()
+
+	if err != nil {
+		c.Error(err)
+		c.String(400, err.Error())
 		return
 	}
 
@@ -69,13 +77,17 @@ func addTodo(c *gin.Context) {
 
 	_, err = pgdb.Model(&todo).Insert()
 	if err != nil {
+		c.Error(err)
 		c.String(500, err.Error())
 		return
 	}
 
+	log.Println("Stored todo to database")
+
 	c.JSON(201, gin.H{
 		"todo": todo,
 	})
+
 }
 
 func main() {
@@ -101,8 +113,7 @@ func main() {
 
 	router.GET("/todos", fetchTodos)
 
-	router.POST("/todos", addTodo)
+	router.POST("/todos", TodoLogger(), addTodo)
 
-	fmt.Printf("Server started in port %s\n", port)
 	router.Run(":" + port)
 }

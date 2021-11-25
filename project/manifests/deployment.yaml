@@ -18,7 +18,7 @@ spec:
           emptyDir: {}
       containers:
         - name: todo-backend
-          image: arkuar/todo-backend:v1.2
+          image: arkuar/todo-backend:v1.3
           imagePullPolicy: Always
           volumeMounts:
             - mountPath: /usr/src/app/cache
