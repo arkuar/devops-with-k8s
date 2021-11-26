@@ -4,7 +4,6 @@ metadata:
   name: log-claim
   namespace: exercise
 spec:
-  storageClassName: manual
   resources:
     requests:
       storage: 1Gi

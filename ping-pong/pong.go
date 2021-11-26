@@ -39,10 +39,15 @@ func pongHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Ping / Pongs: %d", pongs.Counter)
 }
 
+func healthCheck(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+}
+
 func main() {
 	pgDb = database.InitDb()
 
-	http.HandleFunc("/", handler)
+	http.HandleFunc("/", healthCheck)
+	http.HandleFunc("/pingpong", handler)
 	http.HandleFunc("/pongs", pongHandler)
 	log.Fatal(http.ListenAndServe(":3000", nil))
 }

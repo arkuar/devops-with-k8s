@@ -3,8 +3,9 @@ kind: Ingress
 metadata:
   name: log-output-ingress
   namespace: exercise
-  annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: exercise-pingpong-stripprefix@kubernetescrd # <middleware-namespace>-<middleware-name>@kubernetescrd
+# Removed in part 3, gce doesnt support path rewriting
+#  annotations:
+#   traefik.ingress.kubernetes.io/router.middlewares: exercise-pingpong-stripprefix@kubernetescrd # <middleware-namespace>-<middleware-name>@kubernetescrd
 spec:
   rules:
   - http:
