@@ -51,7 +51,9 @@ jobs:
         uses: mdgreenwald/mozilla-sops-action@v1.1.0
       
       - name: Export key from env
-        run: echo "${{ secrets.SOPS_KEY }}" > /home/runner/.config/sops/keys.txt 
+        run: |-
+          echo "${{ secrets.SOPS_KEY }}" > $(pwd)/keys.txt
+          echo "$(pwd)/keys.txt" >> $SOPS_AGE_KEY_FILE
 
       - name: Decrypt keys
         run: |-
