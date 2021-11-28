@@ -29,10 +29,12 @@ jobs:
       - run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
 
       - name: Build frontend
+        working-directory: project/frontend
         run: |-
-          docker build \
+          docker build
           --tag "gcr.io/$PROJECT_ID/$FRONTEND:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
       - name: Build backend
+        working-directory: project/backend
         run: |-
           docker build \
           --tag "gcr.io/$PROJECT_ID/$BACKEND:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
