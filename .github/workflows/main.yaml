@@ -52,6 +52,7 @@ jobs:
       
       - name: Export key from env
         run: |-
+          echo "${{ secrets.SOPS_KEY }}" > $(pwd)/key.txt
           export SOPS_AGE_KEY_FILE=${{ secrets.SOPS_KEY }}
 
       - name: Decrypt keys
