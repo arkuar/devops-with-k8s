@@ -18,7 +18,7 @@ spec:
           emptyDir: {}
       containers:
         - name: todo-backend
-          image: arkuar/todo-backend:v1.3
+          image: BACKEND
           imagePullPolicy: Always
           volumeMounts:
             - mountPath: /usr/src/app/cache
@@ -46,5 +46,5 @@ spec:
                   name: postgres-secret
                   key: password
         - name: todo-frontend
-          image: arkuar/todo-frontend:v1.2
+          image: FRONTEND
           imagePullPolicy: Always

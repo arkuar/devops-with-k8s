@@ -1,0 +1,68 @@
+name: Deploy project
+
+on:
+  push:
+    
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: dwk-cluster
+  GKE_ZONE: europe-north1-b
+  FRONTEND: todo-frontend
+  BACKEND: todo-backend
+
+jobs:
+  build-publish-deploy:
+    name: Build, Publish and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GKE_PROJECT }}
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          export_default_credentials: true
+        
+      - run: gcloud --quiet auth configure-docker
+      - run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+
+      - name: Build frontend
+        run: |-
+          docker build \
+          --tag "gcr.io/$PROJECT_ID/$FRONTEND:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
+      - name: Build backend
+        run: |-
+          docker build \
+          --tag "gcr.io/$PROJECT_ID/$BACKEND:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
+      - name: Publish frontend
+        run: |-
+          docker push "gcr.io/$PROJECT_ID/$FRONTEND:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+      - name: Publish backend
+        run: |-
+          docker push "gcr.io/$PROJECT_ID/$BACKEND:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+
+      - name: Sops Binary Installer
+        uses: mdgreenwald/mozilla-sops-action@v1.1.0
+      
+      - name: Export key from env
+        run: |-
+          echo ${{ secrets.SOPS_KEY }} > $(pwd)/key.txt
+          export SOPS_AGE_KEY_FILE=$(pwd)/key.txt
+
+      - name: Decrypt keys
+        run: |-
+          sops -d project/manifests/secret.enc.yaml > project/manifests/secret.yaml
+      
+      - name: Set up Kustomize
+        uses: imranismail/setup-kustomize@v1
+
+      - name: Deploy
+        run: |-
+          kustomize edit set image BACKEND=gcr.io/$PROJECT_ID/$BACKEND:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
+          kustomize edit set image FRONTEND=gcr.io/$PROJECT_ID/$FRONTEND:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
+          kustomize build . | kubectl apply -f
+          kubectl rollout status deployment $BACKEND
+          kubectl rollout status deployment $FRONTEND
+          kubectl get services -o wide

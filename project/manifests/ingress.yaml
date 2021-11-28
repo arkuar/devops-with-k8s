@@ -3,8 +3,9 @@ kind: Ingress
 metadata:
   name: web-server-ingress
   namespace: todo-ns
-  annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: todo-ns-backend-stripprefix@kubernetescrd
+ # Removed for part3 due to rewriting path not supported by default ingress in GKE
+ # annotations:
+ #   traefik.ingress.kubernetes.io/router.middlewares: todo-ns-backend-stripprefix@kubernetescrd
 spec:
   rules:
    - http:

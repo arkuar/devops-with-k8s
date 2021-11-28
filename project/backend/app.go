@@ -109,11 +109,16 @@ func main() {
 	router := gin.Default()
 	router.Use(cors.New(config))
 
-	router.GET("/image", fetchImage)
+	router.GET("/", func(c *gin.Context) {
+		// Health check
+		c.Status(http.StatusOK)
+	})
 
-	router.GET("/todos", fetchTodos)
+	router.GET("/api/image", fetchImage)
 
-	router.POST("/todos", TodoLogger(), addTodo)
+	router.GET("/api/todos", fetchTodos)
+
+	router.POST("/api/todos", TodoLogger(), addTodo)
 
 	router.Run(":" + port)
 }
