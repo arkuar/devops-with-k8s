@@ -31,15 +31,15 @@ jobs:
       - name: Build frontend
         working-directory: project/frontend
         run: |-
-          docker build
-          --tag "gcr.io/$PROJECT_ID/$FRONTEND:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
-          .
+          docker build \
+            --tag "gcr.io/$PROJECT_ID/$FRONTEND:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
+            .
       - name: Build backend
         working-directory: project/backend
         run: |-
           docker build \
-          --tag "gcr.io/$PROJECT_ID/$BACKEND:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
-          .
+            --tag "gcr.io/$PROJECT_ID/$BACKEND:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
+            .
       - name: Publish frontend
         run: |-
           docker push "gcr.io/$PROJECT_ID/$FRONTEND:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
