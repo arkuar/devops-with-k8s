@@ -50,13 +50,10 @@ jobs:
       - name: Sops Binary Installer
         uses: mdgreenwald/mozilla-sops-action@v1.1.0
       
-      - name: Export key from env
-        run: |-
-          echo "${{ secrets.SOPS_KEY }}" > $(pwd)/keys.txt
-          echo "$(pwd)/keys.txt" >> $SOPS_AGE_KEY_FILE
-
       - name: Decrypt keys
         run: |-
+          echo "${{ secrets.SOPS_KEY }}" > keys.txt
+          export SOPS_AGE_KEY_FILE=keys.txt
           sops -d project/manifests/secret.enc.yaml > project/manifests/secret.yaml
       
       - name: Set up Kustomize
