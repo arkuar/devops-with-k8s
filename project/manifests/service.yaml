@@ -4,7 +4,7 @@ metadata:
   name: web-server-svc
   namespace: todo-ns
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: web-server
   ports:
