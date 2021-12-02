@@ -19,11 +19,19 @@ spec:
       containers:
       - name: log-output-timestamper
         image: arkuar/log-output-timestamper:latest
+        resources:
+          limits:
+            cpu: "150m"
+            memory: "100Mi"
         volumeMounts:
           - mountPath: /usr/src/app/files
             name: shared-output
       - name: log-output-reader
         image: arkuar/log-output-reader
+        resources:
+          limits:
+            cpu: "150m"
+            memory: "100Mi"
         volumeMounts:
           - mountPath: /usr/src/app/files
             name: shared-output

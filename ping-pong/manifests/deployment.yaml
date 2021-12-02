@@ -16,6 +16,10 @@ spec:
       - name: ping-pong
         imagePullPolicy: Always
         image: arkuar/ping-pong:part3
+        resources:
+          limits:
+            cpu: "150m"
+            memory: "100Mi"
         env:
           - name: DB_HOST
             value: postgredb-svc
