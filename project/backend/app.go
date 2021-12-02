@@ -107,6 +107,7 @@ func main() {
 	config.AllowOrigins = []string{allowedOrigin}
 
 	router := gin.Default()
+	log.SetOutput(os.Stdout)
 	router.Use(cors.New(config))
 
 	router.GET("/", func(c *gin.Context) {

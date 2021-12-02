@@ -45,6 +45,14 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: password
+          resources:
+            limits:
+              cpu: "150m"
+              memory: "200Mi"
         - name: todo-frontend
           image: FRONTEND
           imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "150m"
+              memory: "100Mi"
