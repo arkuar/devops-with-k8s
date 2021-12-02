@@ -24,3 +24,6 @@
 
 # 3.07 Commitment
 Chose to use PersistenVolumeClaims as they were already done and didn't have enough time to figure out how to get it to working. Quick googling did reveal that the used ORM does work quite well with Cloud SQL though.
+
+# 3.10
+![Screenshot of the GKE monitor](monitor.png)
