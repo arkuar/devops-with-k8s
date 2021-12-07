@@ -15,7 +15,13 @@ spec:
       containers:
       - name: ping-pong
         imagePullPolicy: Always
-        image: arkuar/ping-pong:part3
+        image: arkuar/ping-pong:part4
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          httpGet:
+            path: /healthz
+            port: 3000
         resources:
           limits:
             cpu: "150m"

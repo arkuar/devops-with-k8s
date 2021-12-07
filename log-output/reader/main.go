@@ -30,7 +30,17 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s\n%s\n%s", os.Getenv("MESSAGE"), string(data), string(pongs))
 }
 
+func healthz(w http.ResponseWriter, r *http.Request) {
+	_, err := http.Get("http://ping-pong-svc/")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
 func main() {
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/healthz", healthz)
 	log.Fatal(http.ListenAndServe(":3000", nil))
 }

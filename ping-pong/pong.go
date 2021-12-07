@@ -5,14 +5,13 @@ import (
 	"log"
 	"net/http"
 	"ping-pong/database"
-
-	"github.com/go-pg/pg/v10"
 )
 
-var pgDb *pg.DB
+var ready = make(chan bool, 1)
 
 func fetchPongs() (pongs database.Ping) {
-	err := pgDb.Model(&pongs).First()
+	db, _ := database.GetDB()
+	err := db.Model(&pongs).First()
 	if err != nil {
 		panic(err)
 	}
@@ -20,8 +19,9 @@ func fetchPongs() (pongs database.Ping) {
 }
 
 func updatePongs(pong *database.Ping) {
+	db, _ := database.GetDB()
 	pong.Counter = pong.Counter + 1
-	_, err := pgDb.Model(pong).WherePK().Update()
+	_, err := db.Model(pong).WherePK().Update()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -39,14 +39,21 @@ func pongHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Ping / Pongs: %d", pongs.Counter)
 }
 
-func healthCheck(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+func healthz(w http.ResponseWriter, r *http.Request) {
+	_, isReady := database.GetDB()
+	if isReady {
+		w.WriteHeader(http.StatusOK)
+	} else {
+		fmt.Println("Database connection not yet ready")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 }
 
 func main() {
-	pgDb = database.InitDb()
+	go database.InitDb()
 
-	http.HandleFunc("/", healthCheck)
+	http.HandleFunc("/", healthz)
+	http.HandleFunc("/healthz", healthz)
 	http.HandleFunc("/pingpong", handler)
 	http.HandleFunc("/pongs", pongHandler)
 	log.Fatal(http.ListenAndServe(":3000", nil))

@@ -28,6 +28,12 @@ spec:
             name: shared-output
       - name: log-output-reader
         image: arkuar/log-output-reader
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          httpGet:
+            path: /healthz
+            port: 3000
         resources:
           limits:
             cpu: "150m"
