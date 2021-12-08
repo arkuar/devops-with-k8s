@@ -5,8 +5,9 @@ import (
 )
 
 type Todo struct {
-	ID      int64
+	ID      int64  `json:"id"`
 	Content string `json:"content"`
+	Done    bool   `json:"done"`
 }
 
 func (t *Todo) Validate() (err error) {

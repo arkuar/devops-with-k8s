@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"project/db"
+	"strconv"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -90,6 +91,35 @@ func addTodo(c *gin.Context) {
 
 }
 
+func markTodoDone(c *gin.Context) {
+	_, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.String(http.StatusBadRequest, "malformed id")
+		return
+	}
+
+	var todo db.Todo
+	err = c.ShouldBindJSON(&todo)
+	if err != nil {
+		c.Error(err)
+		c.String(500, err.Error())
+		return
+	}
+
+	pgdb, _ := db.GetDB()
+
+	_, err = pgdb.Model(&todo).Column("done").WherePK().Update()
+
+	if err != nil {
+		c.Error(err)
+		c.String(500, err.Error())
+		return
+	}
+	c.JSON(201, gin.H{
+		"todo": todo,
+	})
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	if len(port) == 0 {
@@ -127,6 +157,8 @@ func main() {
 	router.GET("/api/image", fetchImage)
 
 	router.GET("/api/todos", fetchTodos)
+
+	router.PUT("/api/todos/:id", markTodoDone)
 
 	router.POST("/api/todos", TodoLogger(), addTodo)
 

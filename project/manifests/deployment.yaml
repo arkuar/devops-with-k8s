@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: web-server
   namespace: todo-ns
@@ -8,6 +8,13 @@ spec:
   selector:
     matchLabels:
       app: web-server
+  strategy:
+    canary:
+      steps:
+        - setWeight: 50
+        - analysis:
+            templates:
+            - templateName: cpu-rate
   template:
     metadata:
       labels:
@@ -18,7 +25,7 @@ spec:
           emptyDir: {}
       containers:
         - name: todo-backend
-          image: arkuar/todo-backend:v1.7
+          image: arkuar/todo-backend:v1.9
           imagePullPolicy: Always
           readinessProbe:
             initialDelaySeconds: 10
@@ -56,7 +63,7 @@ spec:
               cpu: "150m"
               memory: "200Mi"
         - name: todo-frontend
-          image: arkuar/todo-frontend:v1.2
+          image: arkuar/todo-frontend:v1.9
           imagePullPolicy: Always
           resources:
             limits:

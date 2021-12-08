@@ -32,6 +32,17 @@ function App() {
 
   const handleInputChange = (e) => setTodoContent(e.target.value) 
 
+  const markDone = async (todo) => {
+    try {
+      const {data: {todo: updatedTodo}} = await axios.put(`${APP_BACKEND_URL}/todos/${todo.ID}`, {
+        ...todo,
+        done: !todo.done
+      })
+      setTodos((current) => current.map(t => t.ID === updatedTodo.ID ? updatedTodo : t))
+    } catch (error) {
+    }
+  }
+
   return (
     <div className="App">
       <h1>Hello from Kubernetes</h1>
@@ -39,7 +50,7 @@ function App() {
       <input type="text" value={todoContent} onChange={handleInputChange} maxlength="140" />
       <button type="button" onClick={createTodo}>Create TODO</button>
       <ul>
-        {todos.map((todo) => <li key={todo.ID}>{todo.content}</li>)}
+        {todos.map((todo) => <li key={todo.ID} className={todo.done ? "done" : ""} onClick={() => markDone(todo)}>{todo.content}</li>)}
       </ul>
     </div>
   );
