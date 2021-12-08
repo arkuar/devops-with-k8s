@@ -39,7 +39,7 @@ func fetchImage(c *gin.Context) {
 }
 
 func fetchTodos(c *gin.Context) {
-	pgdb := db.GetDB()
+	pgdb, _ := db.GetDB()
 
 	var todos []db.Todo
 
@@ -73,7 +73,7 @@ func addTodo(c *gin.Context) {
 		return
 	}
 
-	pgdb := db.GetDB()
+	pgdb, _ := db.GetDB()
 
 	_, err = pgdb.Model(&todo).Insert()
 	if err != nil {
@@ -100,7 +100,7 @@ func main() {
 		allowedOrigin = "http://localhost"
 	}
 
-	db.InitDb()
+	go db.InitDb()
 
 	config := cors.DefaultConfig()
 
@@ -113,6 +113,15 @@ func main() {
 	router.GET("/", func(c *gin.Context) {
 		// Health check
 		c.Status(http.StatusOK)
+	})
+
+	router.GET("/healthz", func(c *gin.Context) {
+		_, isReady := db.GetDB()
+		if isReady {
+			c.Status(http.StatusOK)
+		} else {
+			c.Status(http.StatusInternalServerError)
+		}
 	})
 
 	router.GET("/api/image", fetchImage)

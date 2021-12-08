@@ -18,8 +18,14 @@ spec:
           emptyDir: {}
       containers:
         - name: todo-backend
-          image: BACKEND
+          image: arkuar/todo-backend:v1.7
           imagePullPolicy: Always
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            httpGet:
+              path: /healthz
+              port: 8080
           volumeMounts:
             - mountPath: /usr/src/app/cache
               name: image-cache
@@ -50,7 +56,7 @@ spec:
               cpu: "150m"
               memory: "200Mi"
         - name: todo-frontend
-          image: FRONTEND
+          image: arkuar/todo-frontend:v1.2
           imagePullPolicy: Always
           resources:
             limits:
