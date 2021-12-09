@@ -16,7 +16,7 @@ spec:
       containers:
       - name: todo-broadcaster
         imagePullPolicy: Always
-        image: arkuar/todo-broadcaster:latest
+        image: BROADCASTER
         env:
           - name: NATS_URL
             value: nats://my-nats.default:4222

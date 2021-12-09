@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- manifests/deployment.yaml
+- manifests/service.yaml
+- manifests/ingress.yaml
+- manifests/secret.yaml
+- manifests/project-db.yaml
+- broadcaster/manifests/deplyoment.yaml
+- broadcaster/manifests/secret.yaml
+images:
+  - name: BACKEND
+    newName: arkuar/todo-backend
+    newTag: v2.0
+  - name: FRONTEND
+    newName: arkuar/todo-frontend
+    newTag: v1.9
+  - name: BROADCASTER
+    newName: arkuar/todo-broadcaster
+    newTag: latest

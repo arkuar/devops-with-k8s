@@ -25,7 +25,7 @@ spec:
           emptyDir: {}
       containers:
         - name: todo-backend
-          image: arkuar/todo-backend:v2.0
+          image: BACKEND
           imagePullPolicy: Always
           readinessProbe:
             initialDelaySeconds: 10
@@ -67,7 +67,7 @@ spec:
               cpu: "150m"
               memory: "200Mi"
         - name: todo-frontend
-          image: arkuar/todo-frontend:v1.9
+          image: FRONTEND
           imagePullPolicy: Always
           resources:
             limits:
