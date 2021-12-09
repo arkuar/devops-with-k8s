@@ -35,12 +35,6 @@ jobs:
         context: project/frontend
         push: true
         tags: arkuar/todo-frontend:${{ github.sha }}
-    - name: Build and Push Broadcaster
-      uses: docker/build-push-action@v2
-      with:
-        context: project/broadcaster/app
-        push: true
-        tags: arkuar/todo-broadcaster:${{ github.sha }}
 
   deploy:
     name: Deploy
@@ -60,7 +54,6 @@ jobs:
       run: |-
         kustomize edit set image FRONTEND=arkuar/todo-frontend:${{ github.sha }}
         kustomize edit set image BACKEND=arkuar/todo-backend:${{ github.sha }}
-        kustomize edit set image BROADCASTER=arkuar/todo-broadcaster:${{ github.sha }}
 
     # Commit and push 
     - uses: EndBug/add-and-commit@v7
