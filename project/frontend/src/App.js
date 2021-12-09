@@ -45,7 +45,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Hello from Kubernetes</h1>
+      <h1>Todo app</h1>
       <img src={imageUrl} width="200" height="200" alt="img" />
       <input type="text" value={todoContent} onChange={handleInputChange} maxlength="140" />
       <button type="button" onClick={createTodo}>Create TODO</button>
