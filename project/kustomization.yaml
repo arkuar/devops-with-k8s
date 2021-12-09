@@ -9,12 +9,12 @@ resources:
 - broadcaster/manifests/deplyoment.yaml
 - broadcaster/manifests/secret.yaml
 images:
-  - name: BACKEND
-    newName: arkuar/todo-backend
-    newTag: v2.0
-  - name: FRONTEND
-    newName: arkuar/todo-frontend
-    newTag: v1.9
-  - name: BROADCASTER
-    newName: arkuar/todo-broadcaster
-    newTag: latest
+- name: BACKEND
+  newName: arkuar/todo-backend
+  newTag: 166fcc897858d58bce81c0bccf82a2ac03fa8fdf
+- name: BROADCASTER
+  newName: arkuar/todo-broadcaster
+  newTag: 166fcc897858d58bce81c0bccf82a2ac03fa8fdf
+- name: FRONTEND
+  newName: arkuar/todo-frontend
+  newTag: 166fcc897858d58bce81c0bccf82a2ac03fa8fdf
