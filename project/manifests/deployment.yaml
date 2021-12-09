@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployoment
+kind: Deployment
 metadata:
   name: web-server
   namespace: todo-ns
