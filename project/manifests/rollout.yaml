@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployoment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: web-server
   namespace: todo-ns
@@ -8,6 +8,13 @@ spec:
   selector:
     matchLabels:
       app: web-server
+  strategy:
+    canary:
+      steps:
+        - setWeight: 50
+        - analysis:
+            templates:
+            - templateName: cpu-rate
   template:
     metadata:
       labels:
