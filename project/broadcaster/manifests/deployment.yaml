@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-broadcaster
+  namespace: todo-ns
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: todo-broadcaster
+  template:
+    metadata:
+      labels:
+        app: todo-broadcaster
+    spec:
+      containers:
+      - name: todo-broadcaster
+        imagePullPolicy: Always
+        image: arkuar/todo-broadcaster:latest
+        env:
+          - name: NATS_URL
+            value: nats://my-nats.default:4222
+          - name: NATS_SUBJECT
+            value: todos
+          - name: NATS_GROUP
+            value: todo-subscribers
+          - name: TG_BOT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: broadcaster-secret
+                key: tgApiToken
+          - name: TG_CHAT_ID
+            valueFrom:
+              secretKeyRef:
+                name: broadcaster-secret
+                key: chatId
+        resources:
+          limits:
+            memory: "64Mi"
+            cpu: "15m"

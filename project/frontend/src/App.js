@@ -34,11 +34,11 @@ function App() {
 
   const markDone = async (todo) => {
     try {
-      const {data: {todo: updatedTodo}} = await axios.put(`${APP_BACKEND_URL}/todos/${todo.ID}`, {
+      const {data: {todo: updatedTodo}} = await axios.put(`${APP_BACKEND_URL}/todos/${todo.id}`, {
         ...todo,
         done: !todo.done
       })
-      setTodos((current) => current.map(t => t.ID === updatedTodo.ID ? updatedTodo : t))
+      setTodos((current) => current.map(t => t.id === updatedTodo.id ? updatedTodo : t))
     } catch (error) {
     }
   }
@@ -50,7 +50,7 @@ function App() {
       <input type="text" value={todoContent} onChange={handleInputChange} maxlength="140" />
       <button type="button" onClick={createTodo}>Create TODO</button>
       <ul>
-        {todos.map((todo) => <li key={todo.ID} className={todo.done ? "done" : ""} onClick={() => markDone(todo)}>{todo.content}</li>)}
+        {todos.map((todo) => <li key={todo.id} className={todo.done ? "done" : ""} onClick={() => markDone(todo)}>{todo.content}</li>)}
       </ul>
     </div>
   );

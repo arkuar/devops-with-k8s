@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -11,6 +13,12 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/nats-io/nats.go"
+)
+
+const (
+	Updated = "updated"
+	Created = "created"
 )
 
 func check(err error) {
@@ -88,6 +96,7 @@ func addTodo(c *gin.Context) {
 	c.JSON(201, gin.H{
 		"todo": todo,
 	})
+	publishTodo(Created, todo)
 
 }
 
@@ -118,6 +127,31 @@ func markTodoDone(c *gin.Context) {
 	c.JSON(201, gin.H{
 		"todo": todo,
 	})
+
+	publishTodo(Updated, todo)
+}
+
+func publishTodo(method string, todo db.Todo) {
+	nc, err := nats.Connect(os.Getenv("NATS_URL"))
+
+	if err != nil {
+		log.Println("error connecting to nats", err)
+		return
+	}
+	data, err := json.Marshal(todo)
+	if err != nil {
+		log.Println("error parsing todo", err)
+		return
+	}
+
+	message := fmt.Sprintf("Todo was %s with content %s\n", method, data)
+
+	err = nc.Publish(os.Getenv("NATS_SUBJECT"), []byte(message))
+	if err != nil {
+		log.Println("error publishing to nats", err)
+	} else {
+		fmt.Printf("Published message to %s\n", os.Getenv("NATS_SUBJECT"))
+	}
 }
 
 func main() {
