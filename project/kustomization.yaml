@@ -11,10 +11,10 @@ resources:
 images:
 - name: BACKEND
   newName: arkuar/todo-backend
-  newTag: 166fcc897858d58bce81c0bccf82a2ac03fa8fdf
+  newTag: 2b89edf2a58307db7c13734aa0e4276119f2edb7
 - name: BROADCASTER
   newName: arkuar/todo-broadcaster
-  newTag: 166fcc897858d58bce81c0bccf82a2ac03fa8fdf
+  newTag: 2b89edf2a58307db7c13734aa0e4276119f2edb7
 - name: FRONTEND
   newName: arkuar/todo-frontend
-  newTag: 166fcc897858d58bce81c0bccf82a2ac03fa8fdf
+  newTag: 2b89edf2a58307db7c13734aa0e4276119f2edb7
