@@ -50,7 +50,7 @@ jobs:
 
     # Update yamls
     - name: Update yamls
-      working-directory: project
+      working-directory: project/manifests
       run: |-
         kustomize edit set image FRONTEND=arkuar/todo-frontend:${{ github.sha }}
         kustomize edit set image BACKEND=arkuar/todo-backend:${{ github.sha }}
