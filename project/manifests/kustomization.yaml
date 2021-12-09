@@ -9,7 +9,7 @@ resources:
 images:
 - name: BACKEND
   newName: arkuar/todo-backend
-  newTag: 10319f1eb34c16e4b197847444bcc25cafcc6f37
+  newTag: 8980ef418c0696b52da50abd2232bed202deaf40
 - name: FRONTEND
   newName: arkuar/todo-frontend
-  newTag: 10319f1eb34c16e4b197847444bcc25cafcc6f37
+  newTag: 8980ef418c0696b52da50abd2232bed202deaf40
