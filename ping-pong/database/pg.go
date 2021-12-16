@@ -16,7 +16,7 @@ var ctx = context.Background()
 var isReady = false
 
 func InitDb() {
-	pgDb := pg.Connect(&pg.Options{
+	pgDb = pg.Connect(&pg.Options{
 		User:     os.Getenv("DB_USER"),
 		Password: os.Getenv("DB_PASSWORD"),
 		Database: os.Getenv("DB_DATABASE"),

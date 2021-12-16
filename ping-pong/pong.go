@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"ping-pong/database"
 )
 
@@ -50,11 +51,14 @@ func healthz(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	go database.InitDb()
-
+	database.InitDb()
+	port, ok := os.LookupEnv("PINGPONG_PORT")
+	if !ok {
+		port = "3000"
+	}
 	http.HandleFunc("/", healthz)
 	http.HandleFunc("/healthz", healthz)
 	http.HandleFunc("/pingpong", handler)
 	http.HandleFunc("/pongs", pongHandler)
-	log.Fatal(http.ListenAndServe(":3000", nil))
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

@@ -1,0 +1,34 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: pingpong-serverless
+  namespace: exercise
+spec:
+  template:
+    metadata:
+      name: pingpong-serverless-v1
+    spec:
+      containers:
+        - image: arkuar/ping-pong:serverless
+          env:
+            - name: PINGPONG_PORT
+              value: "8080"
+            - name: DB_HOST
+              value: postgredb-svc
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgredb-secret
+                  key: username
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: postgredb-secret
+                  key: database
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgredb-secret
+                  key: password
