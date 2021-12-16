@@ -393,3 +393,29 @@ Why Rancher is better than OpenShift
 * No vendor lock-in, moving from Rancher to another provider is easy
 * Makes managing many clusters centrally easy
 * Not tied to one distribution, like OpenShift
+
+# 5.06
+
+![landscape](landscape.png)
+- Hadoop, Oracle, MongoDB, MySQL and Redis used outside this course
+- PostgreSql used outside and in this course with the todo project
+- Spark used outside this course
+- NATS used in part 4
+- Helm used in this course multiple times
+- Gradle and docker compose used outside this course 
+- Argo and flux used in part 4 of this course
+- Github Actions, Gitlab, Jenkins and Travis CI used outside this course
+- k3s used indirectly as k3d uses it
+- Knative used in part 5 of this course
+- Kubernetes used in this course
+- CoreDNS used indirectly as k3d uses it
+- Contour used in part 5 of this course
+- Nginx used outside this course
+- Traefik proxy used indirectly as k3d uses it
+- Linkerd used in part 5 of this course
+- Google Kubernetes Engine (GKE) used in part 3 of this course
+- Google Cloud used in part 3 of this course as GKE is a part of it
+- Heroku used outside this course
+- Google Container Registry used in part 3 of this course
+- Prometheus and Grafana used in this course
+- Grafana loki used in this course
