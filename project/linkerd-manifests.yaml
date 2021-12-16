@@ -1,0 +1,117 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"web-server","namespace":"todo-ns"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"web-server"}},"template":{"metadata":{"labels":{"app":"web-server"}},"spec":{"containers":[{"env":[{"name":"REQUEST_ORIGIN","value":"http://web-server-svc"},{"name":"DB_HOST","value":"postgres-svc"},{"name":"DB_PORT","value":"5432"},{"name":"DB_USER","valueFrom":{"secretKeyRef":{"key":"username","name":"postgres-secret"}}},{"name":"DB_DATABASE","valueFrom":{"secretKeyRef":{"key":"database","name":"postgres-secret"}}},{"name":"DB_PASSWORD","valueFrom":{"secretKeyRef":{"key":"password","name":"postgres-secret"}}},{"name":"NATS_URL","value":"nats://my-nats.default:4222"},{"name":"NATS_SUBJECT","value":"todos"}],"image":"arkuar/todo-backend:8980ef418c0696b52da50abd2232bed202deaf40","imagePullPolicy":"Always","name":"todo-backend","readinessProbe":{"httpGet":{"path":"/healthz","port":8080},"initialDelaySeconds":10,"periodSeconds":5},"resources":{"limits":{"cpu":"150m","memory":"200Mi"}},"volumeMounts":[{"mountPath":"/usr/src/app/cache","name":"image-cache"}]},{"image":"arkuar/todo-frontend:8980ef418c0696b52da50abd2232bed202deaf40","imagePullPolicy":"Always","name":"todo-frontend","resources":{"limits":{"cpu":"150m","memory":"100Mi"}}}],"volumes":[{"emptyDir":{},"name":"image-cache"}]}}}}
+    generation: 1
+    name: web-server
+    namespace: todo-ns
+    resourceVersion: "81483"
+    uid: fd37968b-c981-4911-bfdc-cfcc8488c487
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: web-server
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/inject: enabled
+        labels:
+          app: web-server
+      spec:
+        containers:
+        - env:
+          - name: REQUEST_ORIGIN
+            value: http://web-server-svc
+          - name: DB_HOST
+            value: postgres-svc
+          - name: DB_PORT
+            value: "5432"
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: postgres-secret
+          - name: DB_DATABASE
+            valueFrom:
+              secretKeyRef:
+                key: database
+                name: postgres-secret
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: postgres-secret
+          - name: NATS_URL
+            value: nats://my-nats.default:4222
+          - name: NATS_SUBJECT
+            value: todos
+          image: arkuar/todo-backend:8980ef418c0696b52da50abd2232bed202deaf40
+          imagePullPolicy: Always
+          name: todo-backend
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 150m
+              memory: 200Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /usr/src/app/cache
+            name: image-cache
+        - image: arkuar/todo-frontend:8980ef418c0696b52da50abd2232bed202deaf40
+          imagePullPolicy: Always
+          name: todo-frontend
+          resources:
+            limits:
+              cpu: 150m
+              memory: 100Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: image-cache
+  status:
+    availableReplicas: 1
+    conditions:
+    - message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - message: ReplicaSet "web-server-cf899f4bb" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+kind: List
+metadata: {}
+---
