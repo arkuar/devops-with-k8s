@@ -384,3 +384,12 @@ deployment.apps "flagger" deleted
 namespace "test" deleted
 λ ~/Github/devops-with-k8s/project/ master
 ```
+
+# 5.04
+
+Why Rancher is better than OpenShift
+* Fast installation
+* Smooth version upgrading process with smaller amount of risks involved
+* No vendor lock-in, moving from Rancher to another provider is easy
+* Makes managing many clusters centrally easy
+* Not tied to one distribution, like OpenShift
